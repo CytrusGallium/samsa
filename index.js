@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const net = require('net');
 
 console.log('======================================================================');
 console.log('========================== Samsa SMS API =============================');
@@ -23,7 +24,7 @@ let workers = [];
 webSocketServer.on('connection', (socket) => {
     console.log("Client connected.");
     workers.push(socket);
-    socket.send({ message: "Hello, Client !" });
+    socket.send("Hello, Client !");
     // When you receive a message, send that message to every socket.
     socket.on('message', (msg) => {
         // sockets.forEach(s => s.send(msg));
@@ -59,6 +60,26 @@ app.get("/send", (req, res) => {
 });
 
 app.listen(9000, () => {
-    console.log("Samsa SMS API started on port 9999");
+    console.log("Samsa SMS API started on port 9000");
     console.log('======================================================================');
 });
+
+const url = 'ws://localhost:9999/';
+let wsClient = new WebSocket(url, {
+    headers: {
+        "User-Agent": `WebSocket Client`
+    }
+});
+
+wsClient.on('open', () => {
+    console.log(`Connected to ${url}`);
+    wsClient.send('Hello Server ! This is a Test.');
+});
+
+// wsClient.on('message', (data) => {
+//     console.log(`Message from server: ${data}`);
+// });
+
+// wsClient.on('error', (err) => {
+//     console.log(`WebSocket error: ${err}`);
+// });
