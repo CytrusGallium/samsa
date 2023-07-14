@@ -21,8 +21,9 @@ app.use(cors({
 const webSocketServer = new WebSocket.Server({ port: 9999 });
 let workers = [];
 webSocketServer.on('connection', (socket) => {
+    console.log("Client connected.");
     workers.push(socket);
-    // socket.send("Hello, Client !");
+    socket.send({ message: "Hello, Client !" });
     // When you receive a message, send that message to every socket.
     socket.on('message', (msg) => {
         // sockets.forEach(s => s.send(msg));
